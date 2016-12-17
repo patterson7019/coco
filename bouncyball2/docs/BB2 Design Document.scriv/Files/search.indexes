@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SearchIndexes Version="1.0">
+    <Documents>
+        <Document ID="61">
+            <Title>Blit</Title>
+            <Text>Copy a sprite to the display. The correct page must already be selected. The sprite will be drawn at the specified location, and offset by the center point.
+
+Registers:
+U [in]
+Points to the sprite.
+D [in]
+Contains the X &amp; Y position of where to place the sprite. A is the xpos, B contains the ypos.
+</Text>
+        </Document>
+        <Document ID="54">
+            <Title>Pipe Level Idea</Title>
+            <Text>#</Text>
+        </Document>
+        <Document ID="47">
+            <Title>Gravity Well</Title>
+            <Text>When the player enters the gravity well, it will propel the Ball at great speed from one section of the level to the next. A trail, like a mouse trail </Text>
+        </Document>
+        <Document ID="62">
+            <Title>StoreBlit</Title>
+            <Text>Saves the background behind a sprite to a buffer. Use RestoreBlit to restore this to the background, erasing the sprite.
+
+Registers:
+U [in]
+Points to the sprite. The sprite size and center point information is used.
+D [in]
+Contains the X &amp; Y position of where the sprite will be placed, and saves this area. A is the xpos, B contains the ypos.
+
+Notes:
+Need to be able to manage the memory used by the sprites background. Perhaps it is saved as part of a sprite? The sprite will have memory allocated for it, and background?
+</Text>
+        </Document>
+        <Document ID="70">
+            <Title>CopyBlock</Title>
+            <Text>*******************************************************************************
+* Returns $8000+(ypos*$80+xpos) in X reg
+* 
+* Put X &amp; Y on stack before calling. eg: 
+* 
+* pshs d
+* jsr  calcvideoaddr
+* 
+* 2,s = xpos
+* 3,s = ypos
+*******************************************************************************
+calcvideoaddr	ldx	#$8000
+sbyp	ldb	3,s		; ypos
+	lda	#$80
+	mul			; D=A*B (B is already loaded with ypos
+sbxp	addb	2,s		; xpos
+	leax	d,x		; add the offset to X; X reg now equals $8000+(ypos*$80+xpos)
+	rts
+</Text>
+        </Document>
+        <Document ID="63">
+            <Title>RestoreBlit</Title>
+            <Text>Restores the background behind a sprite. Use StoreBlit to save the background behind a sprite before it is drawn.
+
+Registers:
+U [in]
+Points to the sprite. The sprite size and center point information is used.
+D [in]
+Contains the X &amp; Y position of where the sprite will be placed, and saves this area. A is the xpos, B contains the ypos.
+
+Notes:</Text>
+        </Document>
+        <Document ID="56">
+            <Title>source</Title>
+            <Text>We can get 86 characters in. Mark as Compile as-is, set the single line spacing, and change font size to 9.
+
+         1         2         3         4         5         6         7         8         9
+123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890</Text>
+        </Document>
+        <Document ID="49">
+            <Title>Sprites</Title>
+            <Text>Each sprite will have a header, followed by the sprite data. Sprites are WORD aligned. So a Sprite needs to be 2,4,6,8, etc pixels wide. This is to allow the use of the D register to move data faster. Height makes no difference, although 1 pixel high would be the minimum. 
+
+Transparent pixel will always be at index 0 for performance reasons, and all api’s will be optimized as such. 
+
+The sprite header:
+
+
+Byte #
+Value
+0
+Width of sprite in bytes. $01-$FF
+1
+Height of sprite in pixels. $01-$FF
+2,3
+Center point x &amp; y in twos complement. $00-$FF. -1 would be $FF, -2 $FE etc. Center X is in bytes.
+4+
+The sprite data. Each pixel is a nibble.
+
+
+</Text>
+        </Document>
+        <Document ID="71">
+            <Title>Skype</Title>
+            <Text>Current status
+Simon
+
+Lee
+	•	Got sprite and scrolling background working
+	⁃	Ruff implementation to experiment with
+	⁃	Implemented using center point as well
+	⁃	Need to put together coolspot sprites with center points for full demo
+	•	Vertical scrolling working
+	•	Been working on shape editor to make working with palettes and adding center points easier
+
+To talk about
+The Bounce Engine
+	•	How to handle animations
+	⁃	Looping
+	⁃	Single then goes away
+	•	API calls 
+	⁃	To scroll level
+	⁃	To add an animation
+	⁃	To play a sound
+	•	Drawing blocks. 
+	⁃	Small routine to draw them instead of an image.
+	•	Tile maps. 
+	⁃	Instead of one single tile for the entire level.
+</Text>
+        </Document>
+        <Document ID="64">
+            <Title>Hardware</Title>
+            <Text>We are already in a limited market, so there should not be a concern about if a user has a Orch-90 or SSC. While we would like to reach the widest audience, the goal here is to have fun and take advantage of hardware was not widely supported back in the day. Especially since we may never have played with it before.</Text>
+        </Document>
+        <Document ID="57">
+            <Title>Animation (draft)</Title>
+            <Text>Currently working on ideas. This is to jot down ideas.
+
+Animation structure for controlling what frame is visible, and how much time each frame is visible for. We also point to the address of each frame. 
+
+Animation header:
+Byte #
+Value
+0
+Animation index. $00-$FF
+1
+Number of frames. $02-$ff. This is an inde
+2
+Delay, the number of vsyncs to skip before incrementing to the next frame. $00-$FF. Typical range would be 0-10 maybe?
+3,4
+Word pointer to sprite frame address. Points to the sprite.
+5,6+
+Points to the next sprite frame.
+...
+Next sprite frame.
+
+</Text>
+        </Document>
+        <Document ID="72">
+            <Title>Block dressing</Title>
+            <Text>A dressing in a piece of art that is drawn over top of the block, to change it's appearance and add animations. For example, the slime acid is a dressing that is drawn over the block.
+
+Example of the slime acid block dressing. The lower left shows an empty block, followed by the dressing, then the dressing how it would look over a block.
+
+#</Text>
+        </Document>
+        <Document ID="65">
+            <Title>Sound</Title>
+            <Text>We are requiring the use of an orch90 or ss/c for music and sound. If neither is present, the 6-bit dac is used for sound only. Music could come from a 1-bit sound system, but should only be integrated if we have time.  
+
+48K video 
+10K code   
+8K music 1.5 - 2 min per song (6-8K)    
+
+L,R 
+1,3 Music (stereo) 
+2,4 Sound (stereo)  
+
+6-bit dac supported, if enough time. 
+
+The Orchestra-90 (Orch-90) sound cart has been chosen as it can produce stereo sound. It also lends itself to easier conversion of the sound to play through the 6-bit internal dac as well.
+
+The Speech Sound Cart (SSC) can be considered as well, and I know Simon is chomping at the bit to use it. However it does not function when the Coco 3 is running at 2MHz mode without a hardware modification. I’m not into modifying my pack at this time. So unless the game can run at a buttery smooth 60fps in hi resolution at 1MHz, I don’t see this cart being used. I do however want to use it in a future game. 
+
+Sound tracks can also be posted to iTunes for some extra revenue.
+
+Take a look at Bejewed, as he uses higher quality for music sampling. 
+
+For the title screen, try using high quality music for the title page, then lower for the actual game. 
+
+Cords as a single voice. Cut them short.
+
+</Text>
+        </Document>
+        <Document ID="58">
+            <Title>The Bounce Engine</Title>
+        </Document>
+        <Document ID="80">
+            <Title>Skype meeting 1</Title>
+            <Text>BB2 Skype Meeting
+
+# Agenda
+- Reminder: Set my iMac to lower res for meeting!
+- Transparent blit routine works! Both pixel level and byte level.
+- Tile rendering works!
+
+- Profit sharing
+- Current status
+- Time to complete
+- Game concept
+- Blocks
+- Tiles
+- UI Mockups
+- Memory map, already starting to crash
+- Technologies to develop
+- Reading keyboard and joystick
+- Timer counter (32-bit?)
+- Byte level transparency
+- Using Stereo in the game
+- Page flipping and hardware scrolling
+
+
+
+# Profit sharing
+- What were peoples expectations?
+%50 Lee
+%25 Simon
+%25 Paul
+
+
+# Status #
+
+- Paul has submitted tile and ball mockups
+- Simon got transparent blit routine in
+- Lee just finished tile prototype
+- Simon working on stereo sound (see new requirement)
+- Lee working on tile and block rendering prototype so we can move onto hardware scrolling
+
+
+# Time to Complete #
+
+BB1 took just over 4 months, with some big gaps of time. 
+
+Delivery date
+
+2   mo very functional prototype 
+4   mo Beta
+5-6 mo Final
+
+Hard date is getting it ready for CocoFEST.
+
+
+# Game Concept #
+
+- Same as BB1, but with enhanced graphics, sound, music and more levels.
+- Working on the overall story
+	- what you are gathering, instead of trees
+	- Why you are a ball and why you are playing in the first place
+	- I have been coming up with block and sound engine ideas, blocks have been documented
+	- having some trouble finalizing the story as I am focused on prototyping the game engine.
+
+
+# Colors #
+
+Should fairly quickly decide on what colors to assign to what. 
+
+Pixel index 0 will always be transparent. Note that when drawing in paint tool, 
+
+
+# Blocks #
+
+**Tiles** are used in the background. **Blocks** are the rectangle that player bounces off.
+
+- BB1 is 8x15 (1 line for score)
+- Leaning towards 16x8 pixels (allows for 16x24 blocks on screen) but or 32x8 (8x24) is an option if render speed is hurt
+- Animations on blocks
+ 	- Add sounds the make to ddoc
+ 	- Slime/acid bubbling
+ 	- Mud puddle
+ 	- Regular block just gets a covering
+  		- In other words, we render the block, then put the animation over it.
+  		- Would allow us to use the animation on whatever color block we want.
+ 	- Do we need to have different colored blocks?
+ 		- Yes for the different themes levels, but on the same level? 
+  		- Keeps the tile colors more consistent?
+
+
+# Tiles #
+
+Back ground tiles will match the level and section theme. 
+
+- I got **tiles** rendering. Went with 32x32 pixels (8x6 tiles fit), but we can still experiment with 16x16 pixels (12x16 tiles).
+- 8,16,32 pixels square are fine
+- Should flow together
+- A level can use more then one tile
+
+**Tile themes**
+
+- Circut board
+- Matrix
+- City
+- Hommage to old games
+	- Space invader aliens
+- Other ideas?
+
+
+# UI Mockups #
+
+To help with how the game will look, mockups for title, attract, level select, and in game. 
+
+
+**Title page**
+
+- Will have same options as BB1, with the addition of selection arrow. 
+- Want to be able to navigate the entire game with joystick or arrows and enter/space. 
+
+
+**Attract**
+
+- BB1 showed the story, tile types and programmer info
+- Put Designed by Lee Patterson, Programers and Artist on this page
+- See what else we can fit
+
+
+**Level Select**
+
+- Do we want an overworld?
+- Or just a simple level select like we already have, plus a section selector?
+
+
+**In game**
+
+- I created a couple mocks for tile and blocks to get myself started
+- Show tiled BG and blocks
+- The ball so we can gauge the size of the ball and blocks
+- Lives remaining (mini balls) 
+- score, numbers
+- Percent gauge
+- Number trees remaining
+
+
+
+# Technologies to Develop #
+
+These items are critical to getting BB2 working:
+
+- Horz scrolling _(lee)_
+- Vert scrolling _(lee)_
+- Animation without page flipping _(simon)_
+- Reading keyboard (de bouncing) 
+	- _Look at color-basic-unravelled GETJOY and KEYIN to read joystick and keyboard_
+- Reading joystick 
+- Joystick buttons
+- A timer value (16-bit) See FIRQENR
+- Tile rendering _(prototype done)_
+- Block rendering _(Lee working on)_
+- Animation system for blocks _simon_
+- Autoload binary
+	- Game automatically starts
+- Game loader binary
+	- Automatically starts AND is able to load a large game into higher memory.
+	- http://lost.l-w.ca/0x05/wp-content/uploads/2010/02/Coco-Loaders.pdf
+
+This items will really put BB2 over the top:
+
+- Ambient animations in level
+- Ambient animations on UI
+- Stereo position _(Simon working on)_
+	- Able to pass in a sound id, and location to play sound
+	- Position can **change dynamically** depending on where player is. For example, sound starts at position 240, but as player moves, that sound position changes to 200.
+
+
+
+# Memory Map #
+
+Moved everything to $E00 as it started to crash when I added transparency and my tile code.
+
+    0000 - 0DFF ?
+    0E00 - 7FFF BB2 code
+    
+    8000 - DFFF Video memory mapped in
+
+    F000 - FFFF Control crap
+    60000
+
+# Sound Structure #
+
+    sounds fdb  $3000,$3500,$4000 ...
+           lda	#sndnum
+           jsr  startSound
+           
+BYTE#	VALUE
+0	Bit Flags 
+       Bit  7=0 single sound, bit 7=1 loop
+       Bits 6-0 Counter for loop, how many times to play loop. 0 = infinite
+1      Word value for the size of the sound.       
+2-x    The sound data
+
+
+# Stereo position demo #
+
+As you pass tiles and blocks that have an animation playing, you should hear them approach, then fade away. 
+
+For example, the bubbling acid block, you can hear the hiss of the acid.
+
+</Text>
+        </Document>
+        <Document ID="73">
+            <Title>Death block</Title>
+            <Text>Death Block
+A death block means death when the player touches it. Possible death ideas:
+	•	Your ball will explode.
+	•	Your ball is sucked into the block. Maybe hands come up and grab you. 
+	•	Your ball dissolves into a puddle and is soaked into the block.
+	•	A grave yard cross or head stone slides up from the block when you die.</Text>
+        </Document>
+        <Document ID="66">
+            <Title>Block Sizes</Title>
+            <Text>At 256x192, block sizes can be either 32x16 pixels (BB1 size with 8 blocks across and 16 rows), 16x8 pixels (16x24 blocks) or 32x8 pixels (8x24).
+
+I’m leaning towards the 16x8 pixel block size, but tests should be don’t to check performance.
+
+</Text>
+        </Document>
+        <Document ID="59">
+            <Title>Cls</Title>
+            <Text>Clear the screen, filling it with the pattern specified.
+Registers:
+D [in]
+Contains the fill pattern
+</Text>
+        </Document>
+        <Document ID="81">
+            <Title>temp</Title>
+            <Text>687 cycles
+#
+468 before ldu optimization suggestion by Simon, 384 after
+￼
+</Text>
+        </Document>
+        <Document ID="74">
+            <Title>Slime acid block</Title>
+            <Text>Slime acid block 
+Spills over the top of the block. Warps like in Slime World. Spits acid drops out. If the player touches this tile, they will be dissolved. 
+
+# ￼
+
+See http://lee.8bitcoder.com/bouncy/slimewarp01.gif and http://8bitcoder.com/bouncy/img/slimeanim03.gif</Text>
+        </Document>
+        <Document ID="67">
+            <Title>Overview</Title>
+            <Text>The Bounce Engine is the API that is used to scroll, blit, and make sounds in Bouncy Ball 2. The engine will take care of all the house keeping and heavy lifting required to display bitmap sprites on top of a hardware scrolling background. Hardware horizontal scrolling will be  accomplished using the Coco 3's HVEN ($FF9F) register. Stereo background music and sound will be played through the Orch-90 card and controlled by an IRQ timed sound routine. 
+
+The Bounce Engine's main features include:
+	•	Hardware horizontal scrolling. The background is scrolled via hardware, and sprites on top will be refreshed as needed.
+	•	Backgrounds can be a single tile repeated, or a tile map. 
+	•	Displaying the correct section of the BB2 level, rendering the correct blocks, and dressings on the blocks.
+	•	Animation management. You can tell the engine to play an animation at a particular location, and if the animation will repeat or remove the sprite once finished.
+	•	Displaying a status bar at along the bottom or top, which shows the players score, level completion status, and player lives.
+	•	2 voice background music that loops automatically
+	•	2 voice sound that can play once, a specified number of times, or infinitely.
+	•	Reading from the joysticks.
+	•	Reading from the keyboard.
+
+A major goal with the engine is to be able to move common code into API routines that can be used in future applications. Note that since the memory layout can differ between games, different libraries can be linked included in a project, but still share a common API.
+
+
+</Text>
+        </Document>
+        <Document ID="82">
+            <Title>Title page</Title>
+            <Text>#
+
+
+￼
+
+Make use of palette and timing of when to change the palette. Nick's title page uses 1 color and uses timing to change the color both horz and vertical.
+
+</Text>
+        </Document>
+        <Document ID="4">
+            <Title>Design</Title>
+        </Document>
+        <Document ID="75">
+            <Title>Slow block</Title>
+            <Text>Slow Block
+A slow tile will slow down the players bouncing rate. It doesn't affect the speed they move the level. This allows the player to cover a large distance without the ball hitting a surface or falling off the world.
+
+	•	A puddle of mud that splashes when you hit them. 
+	•	Possibly your ball will appear to have mud on it, and when you are going to start moving faster, the mud will fade away, then disappear.
+	•	Sponge or rubber that bends out then back when player hits it.
+#</Text>
+        </Document>
+        <Document ID="68">
+            <Title>Using the stack</Title>
+            <Text>Since we sometimes need to pass more then a couple parameters, and we need temporary variables, I'd like to think about using the stack, as opposed to using extended addressing when using FCB's or immediate mode + self modify code. That isn't to say that stacks will be the only way to pass data around, or that self mod won't be used. Just that in situations like making a routine more reusable, using the stack may be easier.
+
+Parameters are pushed onto the stack, last parameter first. For example, if you used the D reg to store X &amp; Y coordinates, you use pshs d which pushes B then A. 
+
+8-bit return values are stored in A. 16-bit return values are in D.
+
+Example 1:
+		lda	#$11
+		ldb	#$22
+		ldx	#$1234
+		pshs	x,d		; translates to pshs x,b,a
+		ldb	,s		; B=11
+		ldb	1,s		; B=22
+		ldb	2,s		; B=12
+		ldb	3,s		; B=34
+		puls	x,d		; translates to puls a,b,x
+
+S=1579, before pshs x,b,a, 1575 after.
+
+1575	11
+1576	22
+1577	12
+1578	34
+1579	00
+
+
+Example 2. Pushing D and X to use, U to keep around.
+
+[3]                     ldd     #$4455                             
+[3]                     ldx     #$6789                             
+[3]                     ldu     #$ABCD                             
+[5+6]                   pshs    u,x,d                              
+[4+0]                   ldb     ,s              ; B=44             
+[4+1]                   ldb     1,s             ; B=55             
+[4+1]                   ldb     2,s             ; B=67             
+[4+1]                   ldb     3,s             ; B=89             
+[6+1]                   inc     3,s                                
+[4+1]                   ldb     3,s             ; B=8A             
+[5+6]                   puls    d,x,u           ; X=678A (changed) 
+
+S=1579, before pshs x,b,a, 1573 after.
+
+1573	44
+1574	55
+1575	67
+1576	89 (8A after inc)
+1577	AA
+1578	BB
+1579	00
+
+
+Example 3. Load D with X &amp; Y, then call routine that expects X &amp; Y on the stack:
+
+[3]                     ldd     #$1234                       
+[5+2]                   pshs    d                            
+[8]                     jsr     lee                          
+[5+2]                   puls    d                            
+[19]                    swi                                  
+                                                             
+[4+1]   lee             lda     2,s             ; A=12       
+[4+1]                   lda     3,s             ; A=34       
+[5]                     rts                                  
+
+
+Some examples of how long operations take:
+
+[2]                     lda     #$11                                      
+[2]                     ldb     #$22                                      
+[3]                     ldx     #$1234                                    
+[5+4]                   pshs    x,d             ; translates to pshs x,b,a
+[8]                     jsr     lee                                       
+[5+4]                   puls    x,d             ; translates to puls a,b,x
+[4+0]                   ldb     ,s              ; B=11                    
+[4+1]                   ldb     1,s             ; B=22                    
+[4+1]                   ldb     2,s             ; B=12                    
+[4+1]                   ldb     3,s             ; B=34                    
+[4+2]                   ldb     ,x+                                       
+[4+1]                   ldb     2,x                                       
+[4+1]                   ldb     a,x                                       
+[4+4]                   ldb     d,x                                       
+[5]                     ldb     lee                                       
+[2]                     ldb     #1                                        
+
+The caller is expected to pop the stack after calling the subroutine.
+
+The caller is expected to save registers they want to preserve before calling the subroutine.
+
+
+
+</Text>
+        </Document>
+        <Document ID="69">
+            <Title>Untitled</Title>
+        </Document>
+        <Document ID="83">
+            <Title>In-game</Title>
+        </Document>
+        <Document ID="6">
+            <Title>Distribution</Title>
+            <Text>Target distribution media is a cartridge, however a disk image on an SD card that is plugged into a Coco SDC cart is a good alternative if we run into size limitations. We can also take orders for floppies. No plans to pre make floppies. </Text>
+        </Document>
+        <Document ID="76">
+            <Title>Key block</Title>
+            <Text>Key Block
+The key block is being used instead of a tree, as I want to move away from the tree story line. A key block could also have some sort of animation/sparkle to it.
+
+￼</Text>
+        </Document>
+        <Document ID="84">
+            <Title>Sprites</Title>
+            <Text>Each sprite will have a header, followed by the sprite data. Sprites are WORD aligned. So a Sprite needs to be 2,4,6,8, etc pixels wide. This is to allow the use of the D register to move data faster. Height makes no difference, although 1 pixel high would be the minimum. 
+
+Transparent pixel will always be at index 0 for performance reasons, and all API's will be optimized as such. 
+
+For BB2, the sprite will not take advantage of using a center point to keep the blit routine simpler. Future games likely will use it, or if we create more complex animations. 
+Sprite header:
+
+Byte #
+Value
+0
+Width of sprite in bytes. $01-$FF
+1
+Height of sprite in pixels. $01-$FF
+2+
+The sprite data. Each pixel is a nibble.
+
+Sprite header with center point info:
+
+Byte #
+Value
+0
+Width of sprite in bytes. $01-$FF
+1
+Height of sprite in pixels. $01-$FF
+2,3
+Center point x &amp; y in twos complement. $00-$FF. -1 would be $FF, -2 $FE etc. Center X is in bytes.
+4+
+The sprite data. Each pixel is a nibble.
+
+</Text>
+        </Document>
+        <Document ID="77">
+            <Title>Crumble block</Title>
+            <Text>Crumble Block
+	•	A crumble block takes 1 or more hits, then are destroyed.
+	•	They are used as an obstacle and to assist in sections that don't have walls.
+	•	When you hit it, it will break into pieces, or fade away or just disappear.</Text>
+        </Document>
+        <Document ID="78">
+            <Title>Teleport block</Title>
+            <Text>Teleport Block
+	•	When a player hits this, the disappear with a sparkle like animation.
+	•	Player appears in another section of the level
+	•	Or player is put into another level, like a bonus level</Text>
+        </Document>
+        <Document ID="11">
+            <Title>Title Page</Title>
+            <Synopsis>Title page to the manuscript.</Synopsis>
+            <Text>
+
+
+About &lt;$wc100&gt; words
+
+BOUNCY BALL 2
+
+
+
+
+
+Design Document
+by &lt;$fullname&gt;
+
+
+
+
+#
+
+
+
+Last updated &lt;$mediumdate&gt; &lt;$mediumtime&gt;</Text>
+            <Notes>This is the title page of the manuscript. Note that “Compile As-Is” is ticked - this ensures that the title page’s formatting doesn’t get changed during the Compile process, even though the formatting of other text documents will be overridden to use a standard 12-point manuscript font.
+
+The &lt;$projecttitle&gt; and &lt;$fullname&gt; tags get replaced with the information set in Project &gt; Meta-Data Settings… &gt; Project Properties. You can edit those settings or just replace this text altogether. (Other information is taken from Address Book when the project is created.)</Notes>
+        </Document>
+        <Document ID="79">
+            <Title>Exit block</Title>
+            <Text>Exit Block
+￼
+
+	•	Exit block is how the player leaves the level and moves into the next. 
+	•	Exit block has arrows or the text “exit” on it
+	•	Using color cycling, could have the exit arrows animate nicely
+	•	Exit is locked until all keys have been gathered
+	•	The exit has a cage or something on top to show that it is locked
+	•	There is a padlock 
+	•	You can see the padlock swing back and forth a little. (optional)
+	•	Once you get the last key, the padlock will explode 
+</Text>
+        </Document>
+        <Document ID="12">
+            <Title>Non-Fiction Format</Title>
+            <Text>GENERAL NON-FICTION (STANDARD MANUSCRIPT FORMAT)
+
+About This Template
+When compiled (File &gt; Compile), this project will generate a document in the standard manuscript format used for many types of non-fiction.
+
+How To Use This Template
+	•	Edit the Title Page document to ensure it contains the correct information.
+	•	Create a new folder for each chapter and title each folder with the name of the chapter. If you don’t intend to use chapter names, just use something descriptive that tells you what the chapter is about. (You do not need to title the folders “Chapter One” and so on, as chapter numbering will be taken care of automatically during the Compile process.) The first chapter folder has been created for you with the placeholder title “Chapter Subtitle”.
+	•	Create a new text document for each sub-section within the chapter folders. (Upon export or print, these sub-sections will be separated with the “#” character.)
+	•	If you don’t require a foreword, move the “Foreword” document to the Trash folder. Alternatively, rename it “Preface” or “Introduction” if you prefer. If you would rather the foreword come after the table of contents - as is sometimes the case - drag the “Foreword” document and drop it below the “Contents” document.
+	•	Before compiling, to create your table of contents, simply select all documents you wish to be included in the contents listing (usually this will be the “Foreword”, all chapter folders, and “Endnotes”, but not the individual sections inside chapter folders), then go to Edit &gt; Copy Special &gt; Copy Documents as ToC. Then paste into the “Contents” document (use Edit &gt; Paste and Match Style to paste without the dotted underline between the chapter names and page numbers). The resulting linked text and page number tags will be replaced with the final chapter names and page numbers in the compiled document. You don’t need to do this every time you compile, just when chapters have been added, deleted, renamed or moved around. (Note to Microsoft Word users: If you export to Word, you may need to generate a print preview in Word to force the page numbers to show up correctly - they may appear as question marks before doing so.)
+	•	If you have no footnotes or endnotes in your text, be sure to delete the “Endnotes” document.
+	•	“Notes” and “Ideas” folders have been provided for your convenience, although you can replace them or create different top-level folders for your research materials if necessary (these are just regular folders that have had custom icons assigned to them using the Documents &gt; Change Icon feature.)
+	•	Compile your manuscript into standard manuscript format by selecting File &gt; Compile.
+
+Tables and Figures
+If you need to use tables or figures in your manuscript, you can refer to them using the following tags, replacing “KEYWORD” with a unique word that identifies your table or figure.
+
+!fig(KEYWORD)
+!table(KEYWORD)
+
+For instance, consider the following text, which makes use of such tags.
+
+Table !table(sales): Sales 2011
+Table !table(dates): Shipment dates
+Figure !fig(skeleton): The skeleton of the gnu.
+Figure !fig(malcolmreynolds): The second coolest character in Firefly.
+
+… (For sales figures, see table !table(sales))… For shipment dates, see table !table(dates)… where he discovered the skeleton of a gnarled gnu (see figure !fig(skeleton))… Chronicles providing a similar role, albeit without the Castle actor (see figure !fig(malcolmreynolds)).
+
+In the compiled document, the above text would look like this:
+
+Table 1: Sales 2011
+Table 2: Shipment dates
+Figure 1: The skeleton of the gnu.
+Figure 2: The second coolest character in Firefly.
+
+… (For sales figures, see table 1)… For shipment dates, see table 2… where he discovered the skeleton of a gnarled gnu (see figure 1)… Chronicles providing a similar role, albeit without the Castle actor (see figure 2).
+
+Making Changes
+There are various minor changes you can make to the settings to tweak this template so that it better suits your needs, as follows:
+	•	Chapter subtitles: If you don’t want to include the names of your chapter folders below the chapter numbering text in the compiled document, go to the “Formatting” pane in the Compile sheet and deselect “Title” in the list of elements to include.
+	•	Page header: You can edit the page header in the “Page Settings” pane of the Compile sheet.
+	•	Font: Use “Quick Font Override” in Compile to change the font used throughout the final document.
+	•	Working with chapters instead of smaller sub-sections: By default, this project is set up so that you write each sub-section of a chapter as a separate text document. If you don’t like to break things up quite that much, though, you can equally write a whole chapter in a single text document within each “Chapter” folder.
+
+Sample Document
+See the “Sample MS” PDF file in the Research folder for an example of a document that has been created using this template.
+
+Final Note
+Scrivener project templates are flexible and are not intended to restrict you to a particular workflow. You can change, delete or move the files and folders contained in the template, and you can create your own templates by setting up a skeletal project with the files, folders and settings you would like to use for new projects and using File &gt; Save As Template.</Text>
+        </Document>
+        <Document ID="30">
+            <Title>Description</Title>
+            <Text>Bouncy Ball 2 is a side scroller twitch based arcade style game with very simple controls, and deceptively simple game play. You are a bouncing ball that bounces up and down the screen. The player must collect certain blocks, while avoiding others. 
+
+The developer goals in this game are to keep the game play simple, but fun. Buttery smooth fast scrolling is key. 
+
+In BB1, the SG4 mode was used, and worked very well. You played in a very retro playing field, with the player being a nice large ‘pixel’. 
+In BB2 the game will be enhanced with hi res 16 color graphics, and will play sound and music via the orchestra–90 cart or SSC cart. 
+</Text>
+        </Document>
+        <Document ID="31">
+            <Title>Objective</Title>
+            <Text>Create a CoCo 3 version of the successful Bouncy Ball game, using hi res 16 color graphics, background music, and enhanced sound. </Text>
+        </Document>
+        <Document ID="40">
+            <Title>Level Selection</Title>
+            <Text>#
+Green blocks mean the level has been completed. White is not finished. 
+The player can select any level they want, and any time during the game. However, to see the end game sequence, they need to finish all levels, then complete the last level.
+</Text>
+        </Document>
+        <Document ID="41">
+            <Title>Levels</Title>
+            <Text>
+BB1 levels were 8x15.  BB2 should be able to display at least the same, if not more.
+Planning to build 24 levels, and have the ability for users to add more of their own levels. 
+Prototype needs to be built to decide on final tile sizes. 
+
+#
+Challenge 3 from BB1
+
+￼
+Hideout (the last level) from BB1</Text>
+        </Document>
+        <Document ID="27">
+            <Title>Ideas</Title>
+        </Document>
+        <Document ID="42">
+            <Title>Level Editor</Title>
+            <Text>Original editor is a Linux console app written in C. In order to handle the more complex tile sets, a new editor written in Java will be created.
+
+I am considering the idea of a level editor that users can create their own levels with. What would be mind blowing is if the levels could be uploaded to 8BitCoder.com and users can also download them directly from the game. 
+</Text>
+        </Document>
+        <Document ID="35">
+            <Title>Revisions</Title>
+            <Text>Date
+Comments
+May 17, 2016
+Tree is now Key. Updated tile section.
+May 18
+New system requirements section. Added some possible tile sizes to Block section.
+May 18
+New exit block
+June 2
+Converted document to Scrivener to have better output options, including PDF with a TOC.
+June 3
+Updated output formatting
+June 4
+Expanded system requirements and sound. Started Bounce Engine API section. Updated delivery dates.
+June 13
+Updated the sprite header. Added some sound notes. Updates to BB2 block section.
+</Text>
+        </Document>
+        <Document ID="28">
+            <Title>Notes</Title>
+        </Document>
+        <Document ID="50">
+            <Title>Technologies to develop</Title>
+            <Text>These items are critical to getting BB2 working:
+
+- Horz scrolling _(lee)_
+- Vert scrolling _(lee)_
+- Animation without page flipping _(simon)_
+- Reading keyboard (de bouncing) 
+	- _Look at color-basic-unravelled GETJOY and KEYIN to read joystick and keyboard_
+- Reading joystick 
+- Joystick buttons
+- A timer value (16-bit) See FIRQENR
+- Tile rendering _(prototype done)_
+- Block rendering _(Lee working on)_
+- Animation system for blocks _simon_
+- Autoload binary
+	- Game automatically starts
+- Game loader binary
+	- Automatically starts AND is able to load a large game into higher memory.
+	- http://lost.l-w.ca/0x05/wp-content/uploads/2010/02/Coco-Loaders.pdf
+
+This items will really put BB2 over the top:
+
+- Ambient animations in level
+- Ambient animations on UI
+- Stereo position _(Simon working on)_
+	- Able to pass in a sound id, and location to play sound
+	- Position can **change dynamically** depending on where player is. For example, sound starts at position 240, but as player moves, that sound position changes to 200.</Text>
+        </Document>
+        <Document ID="43">
+            <Title>Blocks</Title>
+            <Text>A block is the object in the level that the player bounces off. You can think of it as a wall. 
+BB1 had 8 possible block values, with 8 different colors.</Text>
+        </Document>
+        <Document ID="36">
+            <Title>Delivery Dates</Title>
+            <Text>Ultimately we want Bouncy Ball 2, and perhaps Downfall like game ready for CocoFEST 2017.
+
+Date
+Time
+Description
+May 2016
+0
+Bouncy Ball 2 started
+June
+1
+
+July
+2
+
+August
+3
+Prototype game running
+September
+4
+
+October
+5
+??? Alpha
+November
+6
+
+December
+7
+??? Beta
+January 2017
+8
+
+February
+9
+
+March 
+10
+
+April
+11
+CocoFEST 2017
+May 2017
+12
+
+
+
+
+
+</Text>
+        </Document>
+        <Document ID="29">
+            <Title>Endnotes</Title>
+            <Text> All footnotes will get inserted here upon print, and this bubble will be removed automatically.</Text>
+        </Document>
+        <Document ID="51">
+            <Title>Research</Title>
+            <Text>	•	How much space will sprites take?
+	•	How much space will sound and music take?
+	•	SDC vs Orchestra or maybe both?
+</Text>
+        </Document>
+        <Document ID="44">
+            <Title>BB1 Blocks</Title>
+            <Text>Bouncy Ball 1 Blocks
+
+0
+empty
+0
+1
+Tree/key
+1
+2
+wall (white)
+2
+3
+empty (invisible kills player)
+3
+8
+crumble
+4
+7
+exit
+5
+2
+slow
+7
+4
+Death
+8
+</Text>
+        </Document>
+        <Document ID="37">
+            <Title>System Requirements</Title>
+            <Text>Coco 3 128K
+CPU: 6809
+Sound: Orchestra 90 or Speech Sound Cart</Text>
+        </Document>
+        <Document ID="52">
+            <Title>Dressing</Title>
+            <Text>The dressing that goes over a block image.
+
+#</Text>
+        </Document>
+        <Document ID="45">
+            <Title>BB2 Blocks</Title>
+            <Text>New tiles for BB2 will have ambient animations, and animations when the player hits them. The basic block is a solid color block, usually white.  Different colors will be used depending on the zone. As an example, Zone 1 would be white, zone 2 would be yellow.
+
+Colors can be used to change the meaning of the block, or theme of the level.
+
+In BB1, the block color indicated what type of block it was. In BB2 we don't have to rely on the block color anymore, and can make use of block dressings instead. This would free us to use color slots for other things.
+
+Example basic blocks with colors:
+
+#
+
+￼
+
+Ideas for what the blocks might look like put together to form level sections:
+
+￼</Text>
+        </Document>
+        <Document ID="38">
+            <Title>Bouncy Ball Character</Title>
+            <Text>I have been trying to think of ways to make the ball a little more of a character with personality. To that end, some ideas:
+	•	Has a pair of eyes that point up and down, the direction the ball is moving. When player moves left right, eyes are forward/backward and up/down
+	•	Squishes when hitting a wall
+
+
+#
+
+Default color will be white, but if there is a multiplayer version, 4 colors will be available. White, red, cyan, yellow. Each player can choose one of those colors. One player game will be white only.
+
+</Text>
+        </Document>
+        <Document ID="60">
+            <Title>InitGfx</Title>
+            <Text>INITGFX
+IN: D reg contains what video mode to select.
+Initialize the graphics mode. 
+Need to be able to select if this is a page flipping mode or scrolling  mode. Depending on how the video memory is mapped, it may be be 
+</Text>
+        </Document>
+        <Document ID="46">
+            <Title>Tiles for background</Title>
+            <Text>The background is composed of repeating tiles. The tiles are sized 32x32. One tile can be used for the entire background, or they can be laid out to form a specific shape. They should repeats horizontally however. So if your scene takes up 3 tiles across, the next 3 should merge with the first 3 seamlessly.
+
+
+
+
+Example blocks from Lee, also showing size compared to a 256x192 display.
+
+#
+
+￼</Text>
+        </Document>
+        <Document ID="39">
+            <Title>Attract Screen</Title>
+            <Text>#
+
+The attract page is meant to give the user a quick look at how the story line, game help, and other important information like programmers. </Text>
+        </Document>
+    </Documents>
+</SearchIndexes>

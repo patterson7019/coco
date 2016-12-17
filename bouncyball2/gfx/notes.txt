@@ -1,0 +1,40 @@
+
+    80 1000 0000 FF98 (65432) Video mode register - VMODE
+    7A 0111 1010 FF99 (65433) Video resolution register - VRES
+    
+    44 0100 0100 FF90 (65424) Initialization Register 0 - INIT0
+    
+    C0           FF9D (65437) Vertical offset register MSB
+    00           FF9E (65438) Vertical offset register LSB
+    
+    30           FFA4	Bank at $8000-$9FFF
+    31           FFA5	Bank at $A000-$BFFF
+    32           FFA6	Bank at $C000-$DFFF
+    33           FFA7	Bank at $E000-$FFFF
+    
+    
+    
+                 FF9F (65439) Horizontal offset register
+    
+    
+    
+    FF98
+    1   graphics
+    0   unused
+    0   composite
+    0   mock
+    0   60 Hz
+    000 one line per row
+80 1000 0000 
+   
+    FF99
+    0   unused
+    00  192 scan lines
+    110 128 bytes per row (256 pixels)
+    10  16 colors (2 pixels per byte)
+1A 0001 1010
+
+0 0000 0000
+1 0000 0001
+2 0000 0010
+3 0000 0011

@@ -1,0 +1,484 @@
+<html>
+
+<head>
+<title>BB2 Design Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+	body {background-color: #bac0c7}
+    p.binderItem {margin: 10.0px 0.0px 0.0px 05.0px; font-family:Courier, Cochin, Times, Arial, serif; font-size:12.0px;}
+    .page {border: 1px solid #727272; background: #fff}
+    hr {
+      border-top: 1px dashed #000;
+      border-bottom: 0px solid #fff;
+      color: #fff;
+      background-color: #fff;
+      height: 0px;
+  </style>
+</head>
+
+<body>
+
+<table border="0" width="100%" cellspacing="3">
+<tr>
+<td>
+
+<table class="page" width="100%" cellspacing="10" cellpadding="2">
+<tr>
+<td valign="top">
+
+<ul>
+<li>
+<p class="binderItem"><strong>Title Page</strong><br/>Title page to the manuscript.</p>
+</li>
+<li>
+<p class="binderItem"><strong>Objective</strong><br/>Create a CoCo 3 version of the successful Bouncy Ball game, using hi res 16 color graphics, background music, and enhanced sound. </p>
+</li>
+<li>
+<p class="binderItem"><strong>Description</strong><br/>Bouncy Ball 2 is a side scroller twitch based arcade style game with very simple controls, and deceptively simple game play. You are a bouncing ball that bounces up and down the screen. The player must collect certain blocks, while avoiding others. <br/>
+<br/>
+The developer goals in this game are to keep the game play simple, but fun. Buttery smooth fast scrolling is key. <br/>
+<br/>
+In BB1, the SG4 mode was used, and worked very well. You played in a very retro playing field, with the player being a nice large ‘pi...</p>
+</li>
+<li>
+<p class="binderItem"><strong>Revisions</strong><br/>Date<br/>
+Comments<br/>
+May 17, 2016<br/>
+Tree is now Key. Updated tile section.<br/>
+May 18<br/>
+New system requirements section. Added some possible tile sizes to Block section.<br/>
+May 18<br/>
+New exit block<br/>
+June 2<br/>
+Converted document to Scrivener to have better output options, including PDF with a TOC.<br/>
+June 3<br/>
+Updated output formatting<br/>
+June 4<br/>
+Expanded system requirements and sound. Started Bounce Engine API section. Updated delivery dates.<br/>
+June 13<br/>
+Updated the sprite header. Added some sound notes. Updates to BB2 block section....</p>
+</li>
+<li>
+<p class="binderItem"><strong>System Requirements</strong><br/>Coco 3 128K<br/>
+CPU: 6809<br/>
+Sound: Orchestra 90 or Speech Sound Cart</p>
+</li>
+<hr/>
+<ul>
+<li>
+<p class="binderItem"><strong>Hardware</strong><br/>We are already in a limited market, so there should not be a concern about if a user has a Orch-90 or SSC. While we would like to reach the widest audience, the goal here is to have fun and take advantage of hardware was not widely supported back in the day. Especially since we may never have played with it before.</p>
+</li>
+<li>
+<p class="binderItem"><strong>Sound</strong><br/>We are requiring the use of an orch90 or ss/c for music and sound. If neither is present, the 6-bit dac is used for sound only. Music could come from a 1-bit sound system, but should only be integrated if we have time.  <br/>
+<br/>
+48K video <br/>
+10K code   <br/>
+8K music 1.5 - 2 min per song (6-8K)    <br/>
+<br/>
+L,R <br/>
+1,3 Music (stereo) <br/>
+2,4 Sound (stereo)  <br/>
+<br/>
+6-bit dac supported, if enough time. <br/>
+<br/>
+The Orchestra-90 (Orch-90) sound cart has been chosen as it can produce stereo sound. It also lends itself to easier conversion...</p>
+</li>
+</ul>
+<hr/>
+<li>
+<p class="binderItem"><strong>Distribution</strong><br/>Target distribution media is a cartridge, however a disk image on an SD card that is plugged into a Coco SDC cart is a good alternative if we run into size limitations. We can also take orders for floppies. No plans to pre make floppies. </p>
+</li>
+<li>
+<p class="binderItem"><strong>Delivery Dates</strong><br/>Ultimately we want Bouncy Ball 2, and perhaps Downfall like game ready for CocoFEST 2017.<br/>
+<br/>
+Date<br/>
+Time<br/>
+Description<br/>
+May 2016<br/>
+0<br/>
+Bouncy Ball 2 started<br/>
+June<br/>
+1<br/>
+<br/>
+July<br/>
+2<br/>
+<br/>
+August<br/>
+3<br/>
+Prototype game running<br/>
+September<br/>
+4<br/>
+<br/>
+October<br/>
+5<br/>
+??? Alpha<br/>
+November<br/>
+6<br/>
+<br/>
+December<br/>
+7<br/>
+??? Beta<br/>
+January 2017<br/>
+8<br/>
+<br/>
+February<br/>
+9<br/>
+<br/>
+March <br/>
+10<br/>
+<br/>
+April<br/>
+11<br/>
+CocoFEST 2017<br/>
+May 2017<br/>
+12<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</p>
+</li>
+<li>
+<p class="binderItem"><strong>Design</strong></p>
+</li>
+<hr/>
+<ul>
+<li>
+<p class="binderItem"><strong>Bouncy Ball Character</strong><br/>I have been trying to think of ways to make the ball a little more of a character with personality. To that end, some ideas:<br/>
+ • Has a pair of eyes that point up and down, the direction the ball is moving. When player moves left right, eyes are forward/backward and up/down<br/>
+ • Squishes when hitting a wall<br/>
+<br/>
+<br/>
+#<br/>
+<br/>
+Default color will be white, but if there is a multiplayer version, 4 colors will be available. White, red, cyan, yellow. Each player can choose one of those colors. One player game will be ...</p>
+</li>
+<li>
+<p class="binderItem"><strong>Title page</strong><br/>#<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Make use of palette and timing of when to change the palette. Nick's title page uses 1 color and uses timing to change the color both horz and vertical.<br/>
+</p>
+</li>
+<li>
+<p class="binderItem"><strong>Attract Screen</strong><br/>#<br/>
+<br/>
+The attract page is meant to give the user a quick look at how the story line, game help, and other important information like programmers. </p>
+</li>
+<li>
+<p class="binderItem"><strong>Levels</strong><br/><br/>
+BB1 levels were 8x15.  BB2 should be able to display at least the same, if not more.<br/>
+Planning to build 24 levels, and have the ability for users to add more of their own levels. <br/>
+Prototype needs to be built to decide on final tile sizes. <br/>
+<br/>
+#<br/>
+Challenge 3 from BB1<br/>
+<br/>
+<br/>
+Hideout (the last level) from BB1</p>
+</li>
+<hr/>
+<ul>
+<li>
+<p class="binderItem"><strong>Level Selection</strong><br/>#<br/>
+Green blocks mean the level has been completed. White is not finished. <br/>
+The player can select any level they want, and any time during the game. However, to see the end game sequence, they need to finish all levels, then complete the last level.</p>
+</li>
+<li>
+<p class="binderItem"><strong>Pipe Level Idea</strong></p>
+</li>
+<li>
+<p class="binderItem"><strong>Level Editor</strong><br/>Original editor is a Linux console app written in C. In order to handle the more complex tile sets, a new editor written in Java will be created.<br/>
+<br/>
+I am considering the idea of a level editor that users can create their own levels with. What would be mind blowing is if the levels could be uploaded to 8BitCoder.com and users can also download them directly from the game. </p>
+</li>
+</ul>
+<hr/>
+<li>
+<p class="binderItem"><strong>In-game</strong></p>
+</li>
+<li>
+<p class="binderItem"><strong>Blocks</strong><br/>A block is the object in the level that the player bounces off. You can think of it as a wall. <br/>
+BB1 had 8 possible block values, with 8 different colors.</p>
+</li>
+<hr/>
+<ul>
+<li>
+<p class="binderItem"><strong>Block Sizes</strong><br/>At 256x192, block sizes can be either 32x16 pixels (BB1 size with 8 blocks across and 16 rows), 16x8 pixels (16x24 blocks) or 32x8 pixels (8x24).<br/>
+<br/>
+I’m leaning towards the 16x8 pixel block size, but tests should be don’t to check performance.<br/>
+</p>
+</li>
+<li>
+<p class="binderItem"><strong>BB1 Blocks</strong><br/>Bouncy Ball 1 Blocks<br/>
+<br/>
+0<br/>
+empty<br/>
+0<br/>
+1<br/>
+Tree/key<br/>
+1<br/>
+2<br/>
+wall (white)<br/>
+2<br/>
+3<br/>
+empty (invisible kills player)<br/>
+3<br/>
+8<br/>
+crumble<br/>
+4<br/>
+7<br/>
+exit<br/>
+5<br/>
+2<br/>
+slow<br/>
+7<br/>
+4<br/>
+Death<br/>
+8</p>
+</li>
+<li>
+<p class="binderItem"><strong>BB2 Blocks</strong><br/>New tiles for BB2 will have ambient animations, and animations when the player hits them. The basic block is a solid color block, usually white.  Different colors will be used depending on the zone. As an example, Zone 1 would be white, zone 2 would be yellow.<br/>
+<br/>
+Colors can be used to change the meaning of the block, or theme of the level.<br/>
+<br/>
+In BB1, the block color indicated what type of block it was. In BB2 we don't have to rely on the block color anymore, and can make use of block dressings inste...</p>
+</li>
+<hr/>
+<ul>
+<li>
+<p class="binderItem"><strong>Block dressing</strong><br/>A dressing in a piece of art that is drawn over top of the block, to change it's appearance and add animations. For example, the slime acid is a dressing that is drawn over the block.<br/>
+<br/>
+Example of the slime acid block dressing. The lower left shows an empty block, followed by the dressing, then the dressing how it would look over a block.<br/>
+<br/>
+#</p>
+</li>
+<li>
+<p class="binderItem"><strong>Death block</strong><br/>Death Block<br/>
+A death block means death when the player touches it. Possible death ideas:<br/>
+ • Your ball will explode.<br/>
+ • Your ball is sucked into the block. Maybe hands come up and grab you. <br/>
+ • Your ball dissolves into a puddle and is soaked into the block.<br/>
+ • A grave yard cross or head stone slides up from the block when you die.</p>
+</li>
+<li>
+<p class="binderItem"><strong>Slime acid block</strong><br/>Slime acid block <br/>
+Spills over the top of the block. Warps like in Slime World. Spits acid drops out. If the player touches this tile, they will be dissolved. <br/>
+<br/>
+# <br/>
+<br/>
+See http://lee.8bitcoder.com/bouncy/slimewarp01.gif and http://8bitcoder.com/bouncy/img/slimeanim03.gif</p>
+</li>
+<li>
+<p class="binderItem"><strong>Slow block</strong><br/>Slow Block<br/>
+A slow tile will slow down the players bouncing rate. It doesn't affect the speed they move the level. This allows the player to cover a large distance without the ball hitting a surface or falling off the world.<br/>
+<br/>
+ • A puddle of mud that splashes when you hit them. <br/>
+ • Possibly your ball will appear to have mud on it, and when you are going to start moving faster, the mud will fade away, then disappear.<br/>
+ • Sponge or rubber that bends out then back when player hits it.<br/>
+#</p>
+</li>
+<li>
+<p class="binderItem"><strong>Key block</strong><br/>Key Block<br/>
+The key block is being used instead of a tree, as I want to move away from the tree story line. A key block could also have some sort of animation/sparkle to it.<br/>
+</p>
+</li>
+<li>
+<p class="binderItem"><strong>Crumble block</strong><br/>Crumble Block<br/>
+ • A crumble block takes 1 or more hits, then are destroyed.<br/>
+ • They are used as an obstacle and to assist in sections that don't have walls.<br/>
+ • When you hit it, it will break into pieces, or fade away or just disappear.</p>
+</li>
+<li>
+<p class="binderItem"><strong>Teleport block</strong><br/>Teleport Block<br/>
+ • When a player hits this, the disappear with a sparkle like animation.<br/>
+ • Player appears in another section of the level<br/>
+ • Or player is put into another level, like a bonus level</p>
+</li>
+<li>
+<p class="binderItem"><strong>Exit block</strong><br/>Exit Block<br/>
+<br/>
+<br/>
+ • Exit block is how the player leaves the level and moves into the next. <br/>
+ • Exit block has arrows or the text “exit” on it<br/>
+ • Using color cycling, could have the exit arrows animate nicely<br/>
+ • Exit is locked until all keys have been gathered<br/>
+ • The exit has a cage or something on top to show that it is locked<br/>
+ • There is a padlock <br/>
+ • You can see the padlock swing back and forth a little. (optional)<br/>
+ • Once you get the last key, the padlock will explode </p>
+</li>
+</ul>
+</ul>
+<hr/>
+<li>
+<p class="binderItem"><strong>Tiles for background</strong><br/>The background is composed of repeating tiles. The tiles are sized 32x32. One tile can be used for the entire background, or they can be laid out to form a specific shape. They should repeats horizontally however. So if your scene takes up 3 tiles across, the next 3 should merge with the first 3 seamlessly.<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+Example blocks from Lee, also showing size compared to a 256x192 display.<br/>
+<br/>
+#<br/>
+</p>
+</li>
+<li>
+<p class="binderItem"><strong>Gravity Well</strong><br/>When the player enters the gravity well, it will propel the Ball at great speed from one section of the level to the next. A trail, like a mouse trail </p>
+</li>
+<li>
+<p class="binderItem"><strong>Sprites</strong><br/>Each sprite will have a header, followed by the sprite data. Sprites are WORD aligned. So a Sprite needs to be 2,4,6,8, etc pixels wide. This is to allow the use of the D register to move data faster. Height makes no difference, although 1 pixel high would be the minimum. <br/>
+<br/>
+Transparent pixel will always be at index 0 for performance reasons, and all API's will be optimized as such. <br/>
+<br/>
+For BB2, the sprite will not take advantage of using a center point to keep the blit routine simpler. Future game...</p>
+</li>
+<li>
+<p class="binderItem"><strong>Animation (draft)</strong><br/>Currently working on ideas. This is to jot down ideas.<br/>
+<br/>
+Animation structure for controlling what frame is visible, and how much time each frame is visible for. We also point to the address of each frame. <br/>
+<br/>
+Animation header:<br/>
+Byte #<br/>
+Value<br/>
+0<br/>
+Animation index. $00-$FF<br/>
+1<br/>
+Number of frames. $02-$ff. This is an inde<br/>
+2<br/>
+Delay, the number of vsyncs to skip before incrementing to the next frame. $00-$FF. Typical range would be 0-10 maybe?<br/>
+3,4<br/>
+Word pointer to sprite frame address. Points to the sprite.<br/>
+5,6+<br/>
+P...</p>
+</li>
+<li>
+<p class="binderItem"><strong>Technologies to develop</strong><br/>These items are critical to getting BB2 working:<br/>
+<br/>
+- Horz scrolling _(lee)_<br/>
+- Vert scrolling _(lee)_<br/>
+- Animation without page flipping _(simon)_<br/>
+- Reading keyboard (de bouncing) <br/>
+ - _Look at color-basic-unravelled GETJOY and KEYIN to read joystick and keyboard_<br/>
+- Reading joystick <br/>
+- Joystick buttons<br/>
+- A timer value (16-bit) See FIRQENR<br/>
+- Tile rendering _(prototype done)_<br/>
+- Block rendering _(Lee working on)_<br/>
+- Animation system for blocks _simon_<br/>
+- Autoload binary<br/>
+ - Game automatically starts<br/>
+- Gam...</p>
+</li>
+<li>
+<p class="binderItem"><strong>The Bounce Engine</strong></p>
+</li>
+<hr/>
+<ul>
+<li>
+<p class="binderItem"><strong>Overview</strong><br/>The Bounce Engine is the API that is used to scroll, blit, and make sounds in Bouncy Ball 2. The engine will take care of all the house keeping and heavy lifting required to display bitmap sprites on top of a hardware scrolling background. Hardware horizontal scrolling will be  accomplished using the Coco 3's HVEN ($FF9F) register. Stereo background music and sound will be played through the Orch-90 card and controlled by an IRQ timed sound routine. <br/>
+<br/>
+The Bounce Engine's main features include:<br/>
+ ...</p>
+</li>
+<li>
+<p class="binderItem"><strong>Using the stack</strong><br/>Since we sometimes need to pass more then a couple parameters, and we need temporary variables, I'd like to think about using the stack, as opposed to using extended addressing when using FCB's or immediate mode + self modify code. That isn't to say that stacks will be the only way to pass data around, or that self mod won't be used. Just that in situations like making a routine more reusable, using the stack may be easier.<br/>
+<br/>
+Parameters are pushed onto the stack, last parameter first. For example...</p>
+</li>
+<li>
+<p class="binderItem"><strong>InitGfx</strong><br/>INITGFX<br/>
+IN: D reg contains what video mode to select.<br/>
+Initialize the graphics mode. <br/>
+Need to be able to select if this is a page flipping mode or scrolling  mode. Depending on how the video memory is mapped, it may be be </p>
+</li>
+<li>
+<p class="binderItem"><strong>Cls</strong><br/>Clear the screen, filling it with the pattern specified.<br/>
+Registers:<br/>
+D [in]<br/>
+Contains the fill pattern</p>
+</li>
+<li>
+<p class="binderItem"><strong>Blit</strong><br/>Copy a sprite to the display. The correct page must already be selected. The sprite will be drawn at the specified location, and offset by the center point.<br/>
+<br/>
+Registers:<br/>
+U [in]<br/>
+Points to the sprite.<br/>
+D [in]<br/>
+Contains the X & Y position of where to place the sprite. A is the xpos, B contains the ypos.</p>
+</li>
+<li>
+<p class="binderItem"><strong>CopyBlock</strong><br/>*******************************************************************************<br/>
+* Returns $8000+(ypos*$80+xpos) in X reg<br/>
+* <br/>
+* Put X & Y on stack before calling. eg: <br/>
+* <br/>
+* pshs d<br/>
+* jsr  calcvideoaddr<br/>
+* <br/>
+* 2,s = xpos<br/>
+* 3,s = ypos<br/>
+*******************************************************************************<br/>
+calcvideoaddr ldx #$8000<br/>
+sbyp ldb 3,s  ; ypos<br/>
+ lda #$80<br/>
+ mul   ; D=A*B (B is already loaded with ypos<br/>
+sbxp addb 2,s  ; xpos<br/>
+ leax d,x  ; add the offset to X; X reg now equals $8000+(ypos*$80+x...</p>
+</li>
+<li>
+<p class="binderItem"><strong>StoreBlit</strong><br/>Saves the background behind a sprite to a buffer. Use RestoreBlit to restore this to the background, erasing the sprite.<br/>
+<br/>
+Registers:<br/>
+U [in]<br/>
+Points to the sprite. The sprite size and center point information is used.<br/>
+D [in]<br/>
+Contains the X & Y position of where the sprite will be placed, and saves this area. A is the xpos, B contains the ypos.<br/>
+<br/>
+Notes:<br/>
+Need to be able to manage the memory used by the sprites background. Perhaps it is saved as part of a sprite? The sprite will have memory allocated ...</p>
+</li>
+<li>
+<p class="binderItem"><strong>RestoreBlit</strong><br/>Restores the background behind a sprite. Use StoreBlit to save the background behind a sprite before it is drawn.<br/>
+<br/>
+Registers:<br/>
+U [in]<br/>
+Points to the sprite. The sprite size and center point information is used.<br/>
+D [in]<br/>
+Contains the X & Y position of where the sprite will be placed, and saves this area. A is the xpos, B contains the ypos.<br/>
+<br/>
+Notes:</p>
+</li>
+</ul>
+<hr/>
+<li>
+<p class="binderItem"><strong>Research</strong><br/> • How much space will sprites take?<br/>
+ • How much space will sound and music take?<br/>
+ • SDC vs Orchestra or maybe both?</p>
+</li>
+</ul>
+<hr/>
+<li>
+<p class="binderItem"><strong>Endnotes</strong><br/> All footnotes will get inserted here upon print, and this bubble will be removed automatically.</p>
+</li>
+<li>
+<p class="binderItem"><strong>source</strong><br/>We can get 86 characters in. Mark as Compile as-is, set the single line spacing, and change font size to 9.<br/>
+<br/>
+         1         2         3         4         5         6         7         8         9<br/>
+123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890</p>
+</li>
+</ul>
+
+</td>
+<td width="8">
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>

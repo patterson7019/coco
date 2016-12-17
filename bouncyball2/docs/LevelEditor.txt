@@ -1,0 +1,41 @@
+www.8BitCoder.com
+
+Arrow keys:  Move the cursor                
+'-': Scroll level left
+'=': Scroll level right
+                
+' ': Drop the current block into the level
+'`': Picks up the block under the cursor and makes the current block 
+'d': Drag mode. Paints the current block as you move with the arrow keys.
+ 
+'i': Insert empty column
+'I': Duplicate current column
+'u': Cut current column
+                
+'s': Save level
+    Note that level automatically saved when you perform any action including moving. 
+    So this isn't really needed anymore.
+'e': Export level to BB1 level that is used by the game
+                
+'r': Increase the number of keys required to exit level
+'R': Decrease the number of keys required to exit level
+                
+'t': Increase level time by 100
+'T': Decrease level time by 100
+                
+'N': Name of level 
+    Your text doesn't show as you type.
+    Enter the level name in UPPERCASE and use the underscore "_" instead of spaces.
+    Hit enter when done.
+                
+'1': empty
+'2': tree
+'3': wall
+'4': invisible wall that kills player (edge of the world)
+'5': breakable wall
+'6': open exit
+'7': closed exit (not used)
+'8': slow
+'9': death
+                
+'<':   Start of level

@@ -1,0 +1,212 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx720\pardirnatural
+
+\f0\fs18 \cf0 BB2 Skype Meeting\
+\
+# Agenda\
+- Reminder: Set my iMac to lower res for meeting!\
+- Transparent blit routine works! Both pixel level and byte level.\
+- Tile rendering works!\
+\
+- Profit sharing\
+- Current status\
+- Time to complete\
+- Game concept\
+- Blocks\
+- Tiles\
+- UI Mockups\
+- Memory map, already starting to crash\
+- Technologies to develop\
+- Reading keyboard and joystick\
+- Timer counter (32-bit?)\
+- Byte level transparency\
+- Using Stereo in the game\
+- Page flipping and hardware scrolling\
+\
+\
+\
+# Profit sharing\
+- What were peoples expectations?\
+%50 Lee\
+%25 Simon\
+%25 Paul\
+\
+\
+# Status #\
+\
+- Paul has submitted tile and ball mockups\
+- Simon got transparent blit routine in\
+- Lee just finished tile prototype\
+- Simon working on stereo sound (see new requirement)\
+- Lee working on tile and block rendering prototype so we can move onto hardware scrolling\
+\
+\
+# Time to Complete #\
+\
+BB1 took just over 4 months, with some big gaps of time. \
+\
+Delivery date\
+\
+2   mo very functional prototype \
+4   mo Beta\
+5-6 mo Final\
+\
+Hard date is getting it ready for CocoFEST.\
+\
+\
+# Game Concept #\
+\
+- Same as BB1, but with enhanced graphics, sound, music and more levels.\
+- Working on the overall story\
+	- what you are gathering, instead of trees\
+	- Why you are a ball and why you are playing in the first place\
+	- I have been coming up with block and sound engine ideas, blocks have been documented\
+	- having some trouble finalizing the story as I am focused on prototyping the game engine.\
+\
+\
+# Colors #\
+\
+Should fairly quickly decide on what colors to assign to what. \
+\
+Pixel index 0 will always be transparent. Note that when drawing in paint tool, \
+\
+\
+# Blocks #\
+\
+**Tiles** are used in the background. **Blocks** are the rectangle that player bounces off.\
+\
+- BB1 is 8x15 (1 line for score)\
+- Leaning towards 16x8 pixels (allows for 16x24 blocks on screen) but or 32x8 (8x24) is an option if render speed is hurt\
+- Animations on blocks\
+ 	- Add sounds the make to ddoc\
+ 	- Slime/acid bubbling\
+ 	- Mud puddle\
+ 	- Regular block just gets a covering\
+  		- In other words, we render the block, then put the animation over it.\
+  		- Would allow us to use the animation on whatever color block we want.\
+ 	- Do we need to have different colored blocks?\
+ 		- Yes for the different themes levels, but on the same level? \
+  		- Keeps the tile colors more consistent?\
+\
+\
+# Tiles #\
+\
+Back ground tiles will match the level and section theme. \
+\
+- I got **tiles** rendering. Went with 32x32 pixels (8x6 tiles fit), but we can still experiment with 16x16 pixels (12x16 tiles).\
+- 8,16,32 pixels square are fine\
+- Should flow together\
+- A level can use more then one tile\
+\
+**Tile themes**\
+\
+- Circut board\
+- Matrix\
+- City\
+- Hommage to old games\
+	- Space invader aliens\
+- Other ideas?\
+\
+\
+# UI Mockups #\
+\
+To help with how the game will look, mockups for title, attract, level select, and in game. \
+\
+\
+**Title page**\
+\
+- Will have same options as BB1, with the addition of selection arrow. \
+- Want to be able to navigate the entire game with joystick or arrows and enter/space. \
+\
+\
+**Attract**\
+\
+- BB1 showed the story, tile types and programmer info\
+- Put Designed by Lee Patterson, Programers and Artist on this page\
+- See what else we can fit\
+\
+\
+**Level Select**\
+\
+- Do we want an overworld?\
+- Or just a simple level select like we already have, plus a section selector?\
+\
+\
+**In game**\
+\
+- I created a couple mocks for tile and blocks to get myself started\
+- Show tiled BG and blocks\
+- The ball so we can gauge the size of the ball and blocks\
+- Lives remaining (mini balls) \
+- score, numbers\
+- Percent gauge\
+- Number trees remaining\
+\
+\
+\
+# Technologies to Develop #\
+\
+These items are critical to getting BB2 working:\
+\
+- Horz scrolling _(lee)_\
+- Vert scrolling _(lee)_\
+- Animation without page flipping _(simon)_\
+- Reading keyboard (de bouncing) \
+	- _Look at color-basic-unravelled GETJOY and KEYIN to read joystick and keyboard_\
+- Reading joystick \
+- Joystick buttons\
+- A timer value (16-bit) See FIRQENR\
+- Tile rendering _(prototype done)_\
+- Block rendering _(Lee working on)_\
+- Animation system for blocks _simon_\
+- Autoload binary\
+	- Game automatically starts\
+- Game loader binary\
+	- Automatically starts AND is able to load a large game into higher memory.\
+	- http://lost.l-w.ca/0x05/wp-content/uploads/2010/02/Coco-Loaders.pdf\
+\
+This items will really put BB2 over the top:\
+\
+- Ambient animations in level\
+- Ambient animations on UI\
+- Stereo position _(Simon working on)_\
+	- Able to pass in a sound id, and location to play sound\
+	- Position can **change dynamically** depending on where player is. For example, sound starts at position 240, but as player moves, that sound position changes to 200.\
+\
+\
+\
+# Memory Map #\
+\
+Moved everything to $E00 as it started to crash when I added transparency and my tile code.\
+\
+    0000 - 0DFF ?\
+    0E00 - 7FFF BB2 code\
+    \
+    8000 - DFFF Video memory mapped in\
+\
+    F000 - FFFF Control crap\
+    60000\
+\
+# Sound Structure #\
+\
+    sounds fdb  $3000,$3500,$4000 ...\
+           lda	#sndnum\
+           jsr  startSound\
+           \
+BYTE#	VALUE\
+0	Bit Flags \
+       Bit  7=0 single sound, bit 7=1 loop\
+       Bits 6-0 Counter for loop, how many times to play loop. 0 = infinite\
+1      Word value for the size of the sound.       \
+2-x    The sound data\
+\
+\
+# Stereo position demo #\
+\
+As you pass tiles and blocks that have an animation playing, you should hear them approach, then fade away. \
+\
+For example, the bubbling acid block, you can hear the hiss of the acid.\
+\
+}

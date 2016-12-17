@@ -1,0 +1,32 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;}
+\deftab720
+\pard\pardeftab720
+
+\f0\fs24 \cf0 These items are critical to getting BB2 working:\
+\
+- Horz scrolling _(lee)_\
+- Vert scrolling _(lee)_\
+- Animation without page flipping _(simon)_\
+- Reading keyboard (de bouncing) \
+	- _Look at color-basic-unravelled GETJOY and KEYIN to read joystick and keyboard_\
+- Reading joystick \
+- Joystick buttons\
+- A timer value (16-bit) See FIRQENR\
+- Tile rendering _(prototype done)_\
+- Block rendering _(Lee working on)_\
+- Animation system for blocks _simon_\
+- Autoload binary\
+	- Game automatically starts\
+- Game loader binary\
+	- Automatically starts AND is able to load a large game into higher memory.\
+	- http://lost.l-w.ca/0x05/wp-content/uploads/2010/02/Coco-Loaders.pdf\
+\
+This items will really put BB2 over the top:\
+\
+- Ambient animations in level\
+- Ambient animations on UI\
+- Stereo position _(Simon working on)_\
+	- Able to pass in a sound id, and location to play sound\
+	- Position can **change dynamically** depending on where player is. For example, sound starts at position 240, but as player moves, that sound position changes to 200.}

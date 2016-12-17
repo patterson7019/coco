@@ -1,0 +1,102 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fmodern\fcharset0 Courier-Bold;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx729\tx1448\tx2172\tx2890\tx3621\tx4326\pardirnatural
+
+\f0\fs24 \cf0 Since we sometimes need to pass more then a couple parameters, and we need temporary variables, I'd like to think about using the stack, as opposed to using extended addressing when using FCB's or immediate mode + self modify code. That isn't to say that stacks will be the only way to pass data around, or that self mod won't be used. Just that in situations like making a routine more reusable, using the stack may be easier.\
+\
+Parameters are pushed onto the stack, last parameter first. For example, if you used the D reg to store X & Y coordinates, you use 
+\f1\b pshs d
+\f0\b0  which pushes B then A. \
+\
+8-bit return values are stored in A. 16-bit return values are in D.
+\fs18 \
+\
+Example 1:\
+		lda	#$11\
+		ldb	#$22\
+		ldx	#$1234\
+		pshs	x,d		; translates to pshs x,b,a\
+		ldb	,s		; B=11\
+		ldb	1,s		; B=22\
+		ldb	2,s		; B=12\
+		ldb	3,s		; B=34\
+		puls	x,d		; translates to puls a,b,x\
+\
+S=1579, before pshs x,b,a, 1575 after.\
+\
+1575	11\
+1576	22\
+1577	12\
+1578	34\
+1579	00\
+\
+\
+Example 2. Pushing D and X to use, U to keep around.\
+\
+[3]                     ldd     #$4455                             \
+[3]                     ldx     #$6789                             \
+[3]                     ldu     #$ABCD                             \
+[5+6]                   pshs    u,x,d                              \
+[4+0]                   ldb     ,s              ; B=44             \
+[4+1]                   ldb     1,s             ; B=55             \
+[4+1]                   ldb     2,s             ; B=67             \
+[4+1]                   ldb     3,s             ; B=89             \
+[6+1]                   inc     3,s                                \
+[4+1]                   ldb     3,s             ; B=8A             \
+[5+6]                   puls    d,x,u           ; X=678A (changed) \
+\
+S=1579, before pshs x,b,a, 1573 after.\
+\
+1573	44\
+1574	55\
+1575	67\
+1576	89 (8A after inc)\
+1577	AA\
+1578	BB\
+1579	00\
+\
+\
+Example 3. Load D with X & Y, then call routine that expects X & Y on the stack:\
+\
+[3]                     ldd     #$1234                       \
+[5+2]                   pshs    d                            \
+[8]                     jsr     lee                          \
+[5+2]                   puls    d                            \
+[19]                    swi                                  \
+                                                             \
+[4+1]   lee             lda     2,s             ; A=12       \
+[4+1]                   lda     3,s             ; A=34       \
+[5]                     rts                                  \
+\
+\
+
+\fs24 Some examples of how long operations take:\
+
+\fs18 \
+[2]                     lda     #$11                                      \
+[2]                     ldb     #$22                                      \
+[3]                     ldx     #$1234                                    \
+[5+4]                   pshs    x,d             ; translates to pshs x,b,a\
+[8]                     jsr     lee                                       \
+[5+4]                   puls    x,d             ; translates to puls a,b,x\
+[4+0]                   ldb     ,s              ; B=11                    \
+[4+1]                   ldb     1,s             ; B=22                    \
+[4+1]                   ldb     2,s             ; B=12                    \
+[4+1]                   ldb     3,s             ; B=34                    \
+[4+2]                   ldb     ,x+                                       \
+[4+1]                   ldb     2,x                                       \
+[4+1]                   ldb     a,x                                       \
+[4+4]                   ldb     d,x                                       \
+[5]                     ldb     lee                                       \
+[2]                     ldb     #1                                        \
+
+\fs24 \
+The caller is expected to pop the stack after calling the subroutine.\
+\
+The caller is expected to save registers they want to preserve before calling the subroutine.
+\fs18 \
+\
+\
+\
+}
